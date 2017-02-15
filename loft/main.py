@@ -14,7 +14,6 @@ config = {
 }
 
 logger = logging.getLogger('loft')
-log_path = ""
 
 
 def build_parser():
@@ -66,7 +65,7 @@ def main():
         if rsync_backup(args.source, args.dest):
             logger.info('Backup completed')
         else:
-            logger.info('error')
+            logger.error('Backup failed')
     else:
         logger.error('Missing arguments')
 
