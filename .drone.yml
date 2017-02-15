@@ -1,0 +1,10 @@
+pipeline:
+    test:
+        image: python:3
+        when:
+            event: push
+            branch: master
+        commands:
+            - pip install -r requirements.txt
+            - echo "Top kek."
+
