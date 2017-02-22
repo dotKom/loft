@@ -1,7 +1,10 @@
 import argparse
+import json
 import logging
+from pprint import pprint
 
 from agents import rsync_backup
+from helpers import sanity_check
 
 
 logger = logging.getLogger('loft')
@@ -45,7 +48,15 @@ def build_parser():
 
 def main():
     parser = build_parser()
+    try:
+        with open('loft/config.json', 'r') as config:
+            config = json.load(config)
+        pprint(config)
+
+    except FileNotFoundError:
+        print('nope')
     args = parser.parse_args()
+    print(dir(args))
 
     logging.basicConfig(filename=args.log + 'backup.log', level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s %(name)s:%(lineno)s %(message)s')
@@ -56,10 +67,12 @@ def main():
                 logger.info('Backup completed')
             else:
                 logger.error('Backup failed')
+            sanity_check(args.source, args.dest, logger)
         else:
             logger.info('Not implemented yet')
     else:
         logger.error('Missing arguments')
+
 
 
 if __name__ == '__main__':
