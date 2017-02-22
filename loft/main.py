@@ -1,17 +1,8 @@
 import argparse
 import logging
-import subprocess
 
-cmd = ['rsync', '-avr']
+from agents import rsync_backup
 
-config = {
-    'source': {
-        'host': '',
-        'path': '/home/hernil/cloud/'},
-    'destination': {
-        'host': 'odin:',
-        'path': '/mnt/storage/hernil/testing/'}
-}
 
 logger = logging.getLogger('loft')
 
@@ -22,6 +13,17 @@ def build_parser():
     #     '--state', choices=['master', 'slave'],
     #     help='State to run in'
     # )
+
+    parser.add_argument(
+        'agent', choices=['rsync', 'rclone'],
+        help='What backup agent to use'
+    )
+
+    parser.add_argument(
+        '--agent-arguments', type=str, default='',
+        help='What arguments loft should pass to the backup agent'
+             'See agent manual for help', dest='agent_arguments'
+    )
 
     parser.add_argument(
         '-s', '--source', type=str, default='',
@@ -41,19 +43,6 @@ def build_parser():
     return parser
 
 
-def rsync_backup(source, dest):
-    source = config['source']
-    dest = config['destination']
-    _cmd = [cmd[0], cmd[1], source['host'] + source['path'], dest['host'] + dest['path']]
-    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE)
-
-    if job.returncode == 0:
-        logger.info(job.stdout.decode("utf-8"))
-        return True
-    else:
-        return False
-
-
 def main():
     parser = build_parser()
     args = parser.parse_args()
@@ -62,10 +51,13 @@ def main():
                         format='%(asctime)s %(levelname)s %(name)s:%(lineno)s %(message)s')
 
     if args.source and args.dest:
-        if rsync_backup(args.source, args.dest):
-            logger.info('Backup completed')
+        if args.agent == 'rsync':
+            if rsync_backup(args.source, args.dest, logger, options=args.agent_arguments):
+                logger.info('Backup completed')
+            else:
+                logger.error('Backup failed')
         else:
-            logger.error('Backup failed')
+            logger.info('Not implemented yet')
     else:
         logger.error('Missing arguments')
 
