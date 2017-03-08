@@ -1,9 +1,10 @@
 import argparse
+from dotmap import DotMap
 import json
 import logging
 from pprint import pprint
 
-from agents import rsync_backup
+from agents import agent_picker, rsync_backup
 from helpers import sanity_check
 
 
@@ -45,35 +46,28 @@ def build_parser():
 
     return parser
 
-
 def main():
-    parser = build_parser()
     try:
-        with open('loft/config.json', 'r') as config:
-            config = json.load(config)
-        pprint(config)
+        with open('loft/config.json', 'r') as config_file:
+            config_file = json.load(config_file)
+        config = DotMap(config_file)
 
     except FileNotFoundError:
-        print('nope')
-    args = parser.parse_args()
-    print(dir(args))
+        # TODO: Build config from args
+        # parser = build_parser()
+        # args = parser.parse_args()
+        print('Args comming soon')
+        exit(1)
 
-    logging.basicConfig(filename=args.log + 'backup.log', level=logging.DEBUG,
+    logging.basicConfig(filename=config.log_destination + 'backup.log', level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s %(name)s:%(lineno)s %(message)s')
 
-    if args.source and args.dest:
-        if args.agent == 'rsync':
-            if rsync_backup(args.source, args.dest, logger, options=args.agent_arguments):
-                logger.info('Backup completed')
-            else:
-                logger.error('Backup failed')
-            sanity_check(args.source, args.dest, logger)
+    for key, job in config.jobs.items():
+        agent = agent_picker(job.agent)
+        if agent(config=job, logger=logger):
+            logger.info('Backup completed')
         else:
-            logger.info('Not implemented yet')
-    else:
-        logger.error('Missing arguments')
-
-
+            logger.error('Backup failed')
 
 if __name__ == '__main__':
     main()

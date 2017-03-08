@@ -1,0 +1,12 @@
+{
+  "log_destination": ".",
+  "jobs": {
+    "file_server_sync": {
+      "agent": "rsync",
+      "options": "avr",
+      "source": "/home/",
+      "dest_host": "fileserver.domain.com",
+      "dest_location": "/mnt/storage/destination/"
+    }
+  }
+}
