@@ -2,6 +2,7 @@ import argparse
 from dotmap import DotMap
 import json
 import logging
+import os
 from pprint import pprint
 
 from agents import agent_picker, rsync_backup
@@ -48,7 +49,7 @@ def build_parser():
 
 def main():
     try:
-        with open('loft/config.json', 'r') as config_file:
+        with open(os.path.dirname(os.path.realpath('__file__')) + '/loft/config.json', 'r') as config_file:
             config_file = json.load(config_file)
         config = DotMap(config_file)
 
@@ -61,7 +62,7 @@ def main():
 
     logging.basicConfig(filename=config.log_destination + 'backup.log', level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s %(name)s:%(lineno)s %(message)s')
-
+    logger.info('Backup commencing')
     for key, job in config.jobs.items():
         agent = agent_picker(job.agent)
         if agent(config=job, logger=logger):
