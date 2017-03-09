@@ -8,7 +8,8 @@ from pprint import pprint
 from agents import agent_picker, rsync_backup
 from helpers import sanity_check
 
-
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
 logger = logging.getLogger('loft')
 
 
@@ -48,8 +49,10 @@ def build_parser():
     return parser
 
 def main():
+    print(os.path.dirname(os.path.realpath('__file__')))
+    print(os.path.dirname(os.path.realpath('__file__')) + '/config.json')
     try:
-        with open(os.path.dirname(os.path.realpath('__file__')) + '/loft/config.json', 'r') as config_file:
+        with open(os.path.join(__location__, 'config.json'), 'r') as config_file:
             config_file = json.load(config_file)
         config = DotMap(config_file)
 
