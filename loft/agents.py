@@ -1,7 +1,7 @@
 import subprocess
 
 
-def rsync_backup(config=False, source="", dest="", logger="", options='avr'):
+def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
     cmd = 'rsync'
 
     if config:
@@ -20,6 +20,8 @@ def rsync_backup(config=False, source="", dest="", logger="", options='avr'):
         logger.debug(job.stdout.decode("utf-8"))
         return True
     else:
+        logger.error("Something failed: ")
+        logger.debug(job.stdout.decode("utf-8"))
         return False
 
 

@@ -49,8 +49,7 @@ def build_parser():
     return parser
 
 def main():
-    print(os.path.dirname(os.path.realpath('__file__')))
-    print(os.path.dirname(os.path.realpath('__file__')) + '/config.json')
+    print(os.path.join(__location__, 'config.json'))
     try:
         with open(os.path.join(__location__, 'config.json'), 'r') as config_file:
             config_file = json.load(config_file)
@@ -69,9 +68,9 @@ def main():
     for key, job in config.jobs.items():
         agent = agent_picker(job.agent)
         if agent(config=job, logger=logger):
-            logger.info('Backup completed')
+            logger.info('Backup job %s completed' % key)
         else:
-            logger.error('Backup failed')
+            logger.error('Backup job %s failed' % key)
 
 if __name__ == '__main__':
     main()
