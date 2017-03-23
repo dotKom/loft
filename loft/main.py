@@ -53,6 +53,7 @@ def main():
     try:
         with open(os.path.join(__location__, 'config.json'), 'r') as config_file:
             config_file = json.load(config_file)
+        # Because we want a "dotable" config traversing
         config = DotMap(config_file)
 
     except FileNotFoundError:
