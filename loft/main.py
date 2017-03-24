@@ -49,7 +49,6 @@ def build_parser():
     return parser
 
 def main():
-    print(os.path.join(__location__, 'config.json'))
     try:
         with open(os.path.join(__location__, 'config.json'), 'r') as config_file:
             config_file = json.load(config_file)
