@@ -1,7 +1,7 @@
 import subprocess
 
 
-def rsync_backup(config=False, source="", dest="", logger="", options='avr'):
+def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
     cmd = 'rsync'
 
     if config:
@@ -20,6 +20,33 @@ def rsync_backup(config=False, source="", dest="", logger="", options='avr'):
         logger.debug(job.stdout.decode("utf-8"))
         return True
     else:
+        logger.error("Something failed: ")
+        logger.debug(job.stdout.decode("utf-8"))
+        return False
+
+
+def rclone_backup(config=None, source="", dest="", logger=None, options='--transfers 10'):
+    cmd = 'rclone'
+
+    if config:
+        source = config.source
+        dest = config.remote_name + ':' + config.remote_location
+        options = config.options
+        _cmd = [cmd, 'sync', source, dest]
+        # Inserting options into command array
+        _cmd[2:2] = options.split()
+    else:
+        logger.error("Config file required at this point")
+        return False
+
+    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE)
+
+    if job.returncode == 0:
+        logger.debug(job.stdout.decode("utf-8"))
+        return True
+    else:
+        logger.error("Something failed: ")
+        logger.debug(job.stdout.decode("utf-8"))
         return False
 
 
@@ -28,5 +55,6 @@ def agent_picker(agent):
 
 # Add agents to dictionary so it is exported to the main program
 agent_declaration = {
-        "rsync": rsync_backup
+        "rsync": rsync_backup,
+        "rclone": rclone_backup
     }

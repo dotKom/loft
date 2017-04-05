@@ -7,6 +7,13 @@
       "source": "/home/",
       "dest_host": "fileserver.domain.com",
       "dest_location": "/mnt/storage/destination/"
+    },
+    "rclone_test": {
+      "agent": "rclone",
+      "options": "--transfers 10",
+      "source": "/home/",
+      "remote_name": "amazon_cloud_drive",
+      "remote_location": "/loft-testing/home/"
     }
   }
 }
