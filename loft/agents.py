@@ -14,7 +14,7 @@ def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
         options = config.options
 
     _cmd = [cmd, '-' + options, source, dest]
-    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE)
+    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     if job.returncode == 0:
         logger.debug(job.stdout.decode("utf-8"))
@@ -39,7 +39,7 @@ def rclone_backup(config=None, source="", dest="", logger=None, options='--trans
         logger.error("Config file required at this point")
         return False
 
-    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE)
+    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     if job.returncode == 0:
         logger.debug(job.stdout.decode("utf-8"))
