@@ -14,6 +14,7 @@ def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
         options = config.options
 
     _cmd = [cmd, '-' + options, source, dest]
+    logger.debug('Starting rsync subprocess')
     job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     if job.returncode == 0:
