@@ -1,4 +1,5 @@
 import subprocess
+from helpers import which
 
 
 def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
@@ -14,7 +15,8 @@ def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
         options = config.options
 
     _cmd = [cmd, '-' + options, source, dest]
-    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE)
+    logger.debug('Starting rsync subprocess')
+    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     if job.returncode == 0:
         logger.debug(job.stdout.decode("utf-8"))
@@ -26,7 +28,7 @@ def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
 
 
 def rclone_backup(config=None, source="", dest="", logger=None, options='--transfers 10'):
-    cmd = 'rclone'
+    cmd = which('rclone')
 
     if config:
         source = config.source
@@ -39,7 +41,7 @@ def rclone_backup(config=None, source="", dest="", logger=None, options='--trans
         logger.error("Config file required at this point")
         return False
 
-    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE)
+    job = subprocess.run(_cmd, shell=False, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
 
     if job.returncode == 0:
         logger.debug(job.stdout.decode("utf-8"))

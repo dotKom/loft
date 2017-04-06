@@ -3,7 +3,6 @@ from dotmap import DotMap
 import json
 import logging
 import os
-from pprint import pprint
 
 from agents import agent_picker, rsync_backup
 from helpers import sanity_check
@@ -67,6 +66,7 @@ def main():
     logger.info('Backup commencing')
     for key, job in config.jobs.items():
         agent = agent_picker(job.agent)
+        logger.info('Backup job %s starting' % key)
         if agent(config=job, logger=logger):
             logger.info('Backup job %s completed' % key)
         else:
