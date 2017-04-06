@@ -1,4 +1,5 @@
 import subprocess
+from helpers import which
 
 
 def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
@@ -27,7 +28,7 @@ def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
 
 
 def rclone_backup(config=None, source="", dest="", logger=None, options='--transfers 10'):
-    cmd = 'rclone'
+    cmd = which('rclone')
 
     if config:
         source = config.source
