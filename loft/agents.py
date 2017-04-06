@@ -1,5 +1,5 @@
 import subprocess
-from helpers import which
+from shutil import which
 
 
 def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
