@@ -29,6 +29,7 @@ def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
 
 def rclone_backup(config=None, source="", dest="", logger=None, options='--transfers 10'):
     cmd = which('rclone')
+    logger.debug('Using the %s executabale' % cmd)
 
     if config:
         source = config.source
