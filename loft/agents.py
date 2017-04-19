@@ -1,5 +1,5 @@
-import subprocess
 import os.path
+import subprocess
 
 
 def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
@@ -34,7 +34,8 @@ def rclone_backup(config=None, source="", dest="", logger=None, options='--trans
             cmd = path
             logger.debug('Using the %s executabale' % cmd)
             break
-        else:
+        # If last entry in paths is not found it is time to fail
+        elif path == paths[-1]:
             logger.error('Cannot find rclone executable')
             return False
 
