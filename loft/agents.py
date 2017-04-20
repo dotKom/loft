@@ -28,7 +28,7 @@ def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
 
 
 def rclone_backup(config=None, source="", dest="", logger=None, options='--transfers 10'):
-    paths = ['/usr/sbin/rclone', '/snap/bin/rclone']
+    paths = ['/usr/sbin/rclone', '/usr/bin/rclone', '/snap/bin/rclone']
     for path in paths:
         if os.path.isfile(path):
             cmd = path
