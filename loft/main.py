@@ -5,7 +5,7 @@ import logging
 import os
 
 from agents import agent_picker, rsync_backup
-from helpers import sanity_check
+from helpers import sanity_checks
 
 __location__ = os.path.realpath(
     os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -69,6 +69,7 @@ def main():
         logger.info('Backup job %s starting' % key)
         if agent(config=job, logger=logger):
             logger.info('Backup job %s completed' % key)
+            sanity_checks(config=job, logger=logger)
         else:
             logger.error('Backup job %s failed' % key)
 
