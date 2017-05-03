@@ -69,7 +69,7 @@ def main():
         logger.info('Backup job %s starting' % key)
         if agent(config=job, logger=logger):
             logger.info('Backup job %s completed' % key)
-            sanity_checks(config=job, logger=logger)
+            sanity_checks(job=job, logger=logger)
         else:
             logger.error('Backup job %s failed' % key)
 
