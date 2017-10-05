@@ -4,14 +4,14 @@
     "file_server_sync": {
       "agent": "rsync",
       "options": "avr",
-      "source": "/home/",
+      "source_location": "/home/",
       "dest_host": "fileserver.domain.com",
       "dest_location": "/mnt/storage/destination/"
     },
     "rclone_test": {
       "agent": "rclone",
       "options": "--transfers 10",
-      "source": "/home/",
+      "source_location": "/home/",
       "remote_name": "amazon_cloud_drive",
       "remote_location": "/loft-testing/home/"
     }

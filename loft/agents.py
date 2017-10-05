@@ -6,12 +6,18 @@ def rsync_backup(config=None, source="", dest="", logger=None, options='avr'):
     cmd = 'rsync'
 
     if config:
-        source = config.source
-        # If no remote host backup will be local
-        if config.dest_host:
+        # Default is local backup
+        source = config.source_location
+        dest = config.dest_location
+
+        if config.source_host and config.dest_host:
+            logger.error("You can not have remote source and destination in same job")
+            return False
+        elif config.source_host:
+            source = config.source_host + ':' + config.source_location
+        elif config.dest_host:
             dest = config.dest_host + ':' + config.dest_location
-        else:
-            dest = config.dest_location
+
         options = config.options
 
     _cmd = [cmd, '-' + options, source, dest]
@@ -40,7 +46,7 @@ def rclone_backup(config=None, source="", dest="", logger=None, options='--trans
             return False
 
     if config:
-        source = config.source
+        source = config.source_location
         dest = config.remote_name + ':' + config.remote_location
         options = config.options
         _cmd = [cmd, 'sync', source, dest]
